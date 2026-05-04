@@ -1,9 +1,17 @@
 TARGET := cpu
 
-.PHONY: build run
+.PHONY: build start stop
 
 build:
-	docker compose -f docker-compose.$(TARGET).yaml build
+	env UID=$(shell id -u) GID=$(shell id -g) \
+		docker compose -f docker-compose.$(TARGET).yaml build
 
-run:
-	docker compose -f docker-compose.$(TARGET).yaml up -d --build
+start:
+	env UID=$(shell id -u) GID=$(shell id -g) \
+		docker compose -f docker-compose.$(TARGET).yaml \
+		up -d --build
+
+stop:
+	env UID=$(shell id -u) GID=$(shell id -g) \
+		docker compose -f docker-compose.$(TARGET).yaml \
+		down --remove-orphans
