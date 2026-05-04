@@ -1,0 +1,29 @@
+services:
+  katarive:
+    build: .
+    ports:
+      - 9421:9421
+    depends_on:
+      - voicevox
+    volumes:
+      - ./data:/app/data
+      - ./.cache:/app/.cache
+    environment:
+      - KATARIVE_VOICEVOX_SERVER=http://voicevox:50021
+    networks:
+      - katarive
+
+  voicevox:
+    image: voicevox/voicevox_engine:cpu-latest
+    container_name: voicevox-cpu
+    ports:
+      - "50021:50021"
+    restart: always
+    networks:
+      katarive:
+        aliases:
+          - voicevox
+
+networks:
+  katarive:
+    driver: bridge
