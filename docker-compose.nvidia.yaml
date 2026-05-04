@@ -11,6 +11,7 @@ services:
       - ./.cache:/app/.cache
     environment:
       - KATARIVE_VOICEVOX_SERVER=http://voicevox:50021
+    restart: on-failure
     networks:
       - katarive
 
