@@ -1,6 +1,7 @@
 services:
   katarive:
     build: .
+    user: "${UID}:${GID}"
     ports:
       - 9421:9421
     depends_on:
