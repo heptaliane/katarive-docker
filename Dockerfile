@@ -18,13 +18,9 @@ RUN apk add git
 RUN git clone https://github.com/heptaliane/katarive-server.git
 RUN cd katarive-server/ && go build .
 
-# Build body-content-source-plugin
-RUN git clone https://github.com/heptaliane/katarive-body-content-source-plugin.git
-RUN cd katarive-body-content-source-plugin/ && go build .
-
-# Build voicevox-narrator-plugin
-RUN git clone https://github.com/heptaliane/katarive-voicevox-narrator-plugin.git
-RUN cd katarive-voicevox-narrator-plugin/ && go build .
+# Build plugins
+COPY build-plugins.sh plugins.csv /app/
+RUN sh build-plugins.sh /app/plugins.csv
 
 FROM alpine:latest
 
@@ -35,7 +31,6 @@ RUN mkdir -p /app/plugins /app/web
 
 COPY --from=fe-builder /app/katarive-web-ui/dist/ /app/web
 COPY --from=go-builder /app/katarive-server/katarive-server /app/
-COPY --from=go-builder /app/katarive-body-content-source-plugin/katarive-body-content-source-plugin /app/plugins/
-COPY --from=go-builder /app/katarive-voicevox-narrator-plugin/katarive-voicevox-narrator-plugin /app/plugins/
+COPY --from=go-builder /app/plugins/ /app/plugins
 
 CMD ["/app/katarive-server"]
