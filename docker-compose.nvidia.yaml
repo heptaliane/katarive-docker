@@ -1,6 +1,9 @@
 services:
   katarive:
-    build: .
+    build:
+      context: .
+      ssh:
+        - default
     user: "${UID}:${GID}"
     ports:
       - 9421:9421
